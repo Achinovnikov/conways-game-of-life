@@ -65,3 +65,7 @@ Desktop.ini
 
 # Documentation generation
 docs/generated/
+
+# Local settings and scripts (remove these lines if you want to track them)
+.warp-settings.md
+# sync-github.ps1  # Uncomment to ignore sync script
