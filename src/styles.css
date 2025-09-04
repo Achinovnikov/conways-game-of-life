@@ -1,0 +1,257 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #333;
+}
+
+.container {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    padding: 2rem;
+    max-width: 900px;
+    width: 90%;
+}
+
+/* Header */
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+h1 {
+    color: #667eea;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    color: #888;
+    font-size: 1.1rem;
+}
+
+/* Game container */
+.game-container {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+#gameCanvas {
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    cursor: crosshair;
+    background: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Controls */
+.controls {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    min-width: 200px;
+}
+
+.control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.control-group label {
+    font-weight: 600;
+    color: #555;
+    font-size: 0.9rem;
+}
+
+/* Buttons */
+.btn {
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 8px;
+    background: #f0f0f0;
+    color: #333;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    background: #e0e0e0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-size: 1.2rem;
+    padding: 0.8rem 1.5rem;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #5a67d8 0%, #6b4199 100%);
+}
+
+/* Sliders */
+input[type="range"] {
+    width: 100%;
+    height: 6px;
+    border-radius: 3px;
+    background: #ddd;
+    outline: none;
+    margin: 0.5rem 0;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    cursor: pointer;
+}
+
+/* Pattern selector */
+select {
+    padding: 0.5rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    background: white;
+    color: #333;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+select:hover, select:focus {
+    border-color: #667eea;
+    outline: none;
+}
+
+/* Info section */
+.info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid #eee;
+}
+
+.stats {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.stats span {
+    font-size: 1rem;
+    color: #666;
+}
+
+.stats strong {
+    color: #667eea;
+    font-size: 1.2rem;
+    margin-left: 0.3rem;
+}
+
+.rules h3 {
+    color: #555;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.rules ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.rules li {
+    color: #666;
+    padding: 0.3rem 0;
+    font-size: 0.9rem;
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+.rules li:before {
+    content: "•";
+    color: #667eea;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .container {
+        padding: 1.5rem;
+        width: 95%;
+    }
+    
+    .game-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .controls {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .control-group {
+        flex: 1 1 45%;
+        min-width: 150px;
+    }
+    
+    .info {
+        grid-template-columns: 1fr;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+}
+
+/* Animations */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.btn-primary.playing {
+    animation: pulse 2s infinite;
+}

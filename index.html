@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conway's Game of Life</title>
+    <link rel="stylesheet" href="src/styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Conway's Game of Life</h1>
+            <p class="subtitle">A cellular automaton simulation</p>
+        </header>
+        
+        <div class="game-container">
+            <canvas id="gameCanvas"></canvas>
+            
+            <div class="controls">
+                <div class="control-group">
+                    <button id="playPauseBtn" class="btn btn-primary">
+                        <span class="play-icon">▶</span>
+                        <span class="pause-icon" style="display:none;">⏸</span>
+                    </button>
+                    <button id="stepBtn" class="btn">Step</button>
+                    <button id="clearBtn" class="btn">Clear</button>
+                    <button id="randomBtn" class="btn">Random</button>
+                </div>
+                
+                <div class="control-group">
+                    <label for="speedSlider">Speed:</label>
+                    <input type="range" id="speedSlider" min="1" max="60" value="10">
+                    <span id="speedValue">10</span> fps
+                </div>
+                
+                <div class="control-group">
+                    <label for="gridSizeSlider">Grid Size:</label>
+                    <input type="range" id="gridSizeSlider" min="10" max="100" value="50">
+                    <span id="gridSizeValue">50</span> x <span id="gridSizeValue2">50</span>
+                </div>
+                
+                <div class="patterns">
+                    <label>Patterns:</label>
+                    <select id="patternSelect">
+                        <option value="">Select pattern...</option>
+                        <option value="glider">Glider</option>
+                        <option value="blinker">Blinker</option>
+                        <option value="toad">Toad</option>
+                        <option value="beacon">Beacon</option>
+                        <option value="pulsar">Pulsar</option>
+                        <option value="pentadecathlon">Pentadecathlon</option>
+                        <option value="glider-gun">Gosper Glider Gun</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div class="info">
+            <div class="stats">
+                <span>Generation: <strong id="generation">0</strong></span>
+                <span>Population: <strong id="population">0</strong></span>
+            </div>
+            
+            <div class="rules">
+                <h3>Rules:</h3>
+                <ul>
+                    <li>Any live cell with 2 or 3 live neighbors survives</li>
+                    <li>Any dead cell with exactly 3 live neighbors becomes alive</li>
+                    <li>All other live cells die, and all other dead cells stay dead</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <script src="src/game.js"></script>
+</body>
+</html>
