@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conway's Game of Life - Test Suite</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .test-container {
+            background: white;
+            color: #333;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .test-header {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+        .test-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f7f7f7;
+            border-radius: 5px;
+        }
+        .test-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #764ba2;
+        }
+        .test-result {
+            padding: 5px 10px;
+            margin: 5px 0;
+            border-radius: 3px;
+        }
+        .pass {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .fail {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .warn {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        #testCanvas {
+            display: none;
+        }
+        .stats {
+            padding: 15px;
+            background: #667eea;
+            color: white;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #764ba2;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-header">🧪 Conway's Game of Life - Comprehensive Test Suite</div>
+        
+        <button onclick="runAllTests()">Run All Tests</button>
+        <button onclick="clearResults()">Clear Results</button>
+        
+        <div id="testResults"></div>
+        <div id="testStats" class="stats" style="display:none;"></div>
+    </div>
+
+    <canvas id="testCanvas"></canvas>
+
+    <script src="src/game.js"></script>
+    <script>
+        let testResults = [];
+        let passCount = 0;
+        let failCount = 0;
+        let warnCount = 0;
+
+        function log(message, type = 'info') {
+            const resultsDiv = document.getElementById('testResults');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `test-result ${type}`;
+            resultDiv.textContent = message;
+            resultsDiv.appendChild(resultDiv);
+            
+            if (type === 'pass') passCount++;
+            else if (type === 'fail') failCount++;
+            else if (type === 'warn') warnCount++;
+        }
+
+        function createSection(title) {
+            const resultsDiv = document.getElementById('testResults');
+            const sectionDiv = document.createElement('div');
+            sectionDiv.className = 'test-section';
+            sectionDiv.innerHTML = `<div class="test-title">${title}</div>`;
+            resultsDiv.appendChild(sectionDiv);
+            return sectionDiv;
+        }
+
+        function clearResults() {
+            document.getElementById('testResults').innerHTML = '';
+            document.getElementById('testStats').style.display = 'none';
+            passCount = 0;
+            failCount = 0;
+            warnCount = 0;
+        }
+
+        async function runAllTests() {
+            clearResults();
+            
+            // Test 1: Code Quality Analysis
+            await testCodeQuality();
+            
+            // Test 2: Security Analysis
+            await testSecurity();
+            
+            // Test 3: Game Logic Tests
+            await testGameLogic();
+            
+            // Test 4: Performance Tests
+            await testPerformance();
+            
+            // Test 5: Memory Leak Detection
+            await testMemoryLeaks();
+            
+            // Test 6: Browser Compatibility
+            await testBrowserCompatibility();
+            
+            // Test 7: Edge Cases
+            await testEdgeCases();
+            
+            // Show statistics
+            showStats();
+        }
+
+        async function testCodeQuality() {
+            const section = createSection('📝 Code Quality Analysis');
+            
+            // Check if GameOfLife class exists
+            if (typeof GameOfLife !== 'undefined') {
+                log('✓ GameOfLife class is properly defined', 'pass');
+            } else {
+                log('✗ GameOfLife class not found', 'fail');
+                return;
+            }
+            
+            // Check for required methods
+            const requiredMethods = ['init', 'step', 'draw', 'clear', 'randomize', 
+                                    'countNeighbors', 'loadPattern', 'resizeGrid'];
+            const game = new GameOfLife('testCanvas');
+            
+            requiredMethods.forEach(method => {
+                if (typeof game[method] === 'function') {
+                    log(`✓ Method ${method}() exists`, 'pass');
+                } else {
+                    log(`✗ Method ${method}() is missing`, 'fail');
+                }
+            });
+            
+            // Check for potential issues
+            const gameCode = GameOfLife.toString();
+            
+            // Check for console.log statements
+            if (gameCode.includes('console.log')) {
+                log('⚠ Found console.log statements (should be removed in production)', 'warn');
+            } else {
+                log('✓ No console.log statements found', 'pass');
+            }
+            
+            // Check for proper error handling
+            if (!gameCode.includes('try') && !gameCode.includes('catch')) {
+                log('⚠ No try-catch blocks found (consider adding error handling)', 'warn');
+            } else {
+                log('✓ Error handling blocks detected', 'pass');
+            }
+            
+            // Check for comments
+            if (gameCode.includes('//') || gameCode.includes('/*')) {
+                log('✓ Code contains comments', 'pass');
+            } else {
+                log('⚠ No comments found in code', 'warn');
+            }
+        }
+
+        async function testSecurity() {
+            const section = createSection('🔒 Security Analysis');
+            
+            const game = new GameOfLife('testCanvas');
+            
+            // Test XSS vulnerability
+            const xssPayloads = [
+                '<script>alert("XSS")</script>',
+                'javascript:alert("XSS")',
+                '<img src=x onerror=alert("XSS")>',
+                '"><script>alert("XSS")</script>'
+            ];
+            
+            let xssVulnerable = false;
+            
+            // Check if any user input is directly inserted into DOM
+            const gameCode = GameOfLife.toString();
+            if (gameCode.includes('innerHTML')) {
+                log('⚠ Uses innerHTML - potential XSS risk if not sanitized', 'warn');
+                xssVulnerable = true;
+            } else {
+                log('✓ Does not use innerHTML directly', 'pass');
+            }
+            
+            if (gameCode.includes('eval(')) {
+                log('✗ Uses eval() - serious security risk', 'fail');
+                xssVulnerable = true;
+            } else {
+                log('✓ Does not use eval()', 'pass');
+            }
+            
+            // Check for input validation
+            if (gameCode.includes('parseInt') || gameCode.includes('Math.floor')) {
+                log('✓ Uses proper number parsing/validation', 'pass');
+            } else {
+                log('⚠ May lack input validation', 'warn');
+            }
+            
+            // Check for DOM manipulation safety
+            if (gameCode.includes('textContent') || gameCode.includes('innerText')) {
+                log('✓ Uses safe DOM text manipulation methods', 'pass');
+            }
+            
+            // Check localStorage/sessionStorage usage
+            if (gameCode.includes('localStorage') || gameCode.includes('sessionStorage')) {
+                log('ℹ Uses browser storage - ensure sensitive data is not stored', 'info');
+            } else {
+                log('✓ Does not use browser storage', 'pass');
+            }
+        }
+
+        async function testGameLogic() {
+            const section = createSection('🎮 Game Logic Tests');
+            
+            const game = new GameOfLife('testCanvas');
+            
+            // Test 1: Empty grid should stay empty
+            game.clear();
+            const emptyGrid = JSON.stringify(game.grid);
+            game.step();
+            if (JSON.stringify(game.grid) === emptyGrid) {
+                log('✓ Empty grid remains empty after step', 'pass');
+            } else {
+                log('✗ Empty grid changed after step', 'fail');
+            }
+            
+            // Test 2: Blinker pattern (period 2 oscillator)
+            game.clear();
+            game.grid[5][4] = 1;
+            game.grid[5][5] = 1;
+            game.grid[5][6] = 1;
+            const blinkerH = JSON.stringify(game.grid);
+            
+            game.step();
+            const blinkerV = JSON.stringify(game.grid);
+            
+            game.step();
+            if (JSON.stringify(game.grid) === blinkerH) {
+                log('✓ Blinker oscillates correctly (period 2)', 'pass');
+            } else {
+                log('✗ Blinker pattern does not oscillate correctly', 'fail');
+            }
+            
+            // Test 3: Block pattern (still life)
+            game.clear();
+            game.grid[5][5] = 1;
+            game.grid[5][6] = 1;
+            game.grid[6][5] = 1;
+            game.grid[6][6] = 1;
+            const block = JSON.stringify(game.grid);
+            
+            game.step();
+            if (JSON.stringify(game.grid) === block) {
+                log('✓ Block pattern remains stable (still life)', 'pass');
+            } else {
+                log('✗ Block pattern is not stable', 'fail');
+            }
+            
+            // Test 4: Neighbor counting
+            game.clear();
+            game.grid[5][5] = 1;
+            game.grid[5][6] = 1;
+            game.grid[6][5] = 1;
+            
+            const neighbors = game.countNeighbors(5, 5);
+            if (neighbors === 2) {
+                log('✓ Neighbor counting is correct', 'pass');
+            } else {
+                log(`✗ Neighbor counting error: expected 2, got ${neighbors}`, 'fail');
+            }
+            
+            // Test 5: Edge wrapping (toroidal topology)
+            game.clear();
+            game.grid[0][0] = 1;
+            game.grid[0][game.gridSize-1] = 1;
+            game.grid[game.gridSize-1][0] = 1;
+            
+            const cornerNeighbors = game.countNeighbors(0, 0);
+            if (cornerNeighbors === 2) {
+                log('✓ Edge wrapping works correctly', 'pass');
+            } else {
+                log(`✗ Edge wrapping error: expected 2 neighbors, got ${cornerNeighbors}`, 'fail');
+            }
+        }
+
+        async function testPerformance() {
+            const section = createSection('⚡ Performance Tests');
+            
+            const game = new GameOfLife('testCanvas');
+            
+            // Test different grid sizes
+            const sizes = [10, 30, 50, 75, 100];
+            
+            for (const size of sizes) {
+                game.resizeGrid(size);
+                game.randomize();
+                
+                const startTime = performance.now();
+                for (let i = 0; i < 100; i++) {
+                    game.step();
+                }
+                const endTime = performance.now();
+                const avgTime = (endTime - startTime) / 100;
+                
+                if (avgTime < 16.67) { // 60 FPS threshold
+                    log(`✓ ${size}×${size} grid: ${avgTime.toFixed(2)}ms per step (60+ FPS capable)`, 'pass');
+                } else if (avgTime < 33.33) { // 30 FPS threshold
+                    log(`⚠ ${size}×${size} grid: ${avgTime.toFixed(2)}ms per step (30-60 FPS)`, 'warn');
+                } else {
+                    log(`✗ ${size}×${size} grid: ${avgTime.toFixed(2)}ms per step (<30 FPS)`, 'fail');
+                }
+            }
+            
+            // Test draw performance
+            game.resizeGrid(50);
+            game.randomize();
+            
+            const drawStart = performance.now();
+            for (let i = 0; i < 100; i++) {
+                game.draw();
+            }
+            const drawEnd = performance.now();
+            const avgDrawTime = (drawEnd - drawStart) / 100;
+            
+            if (avgDrawTime < 5) {
+                log(`✓ Draw performance: ${avgDrawTime.toFixed(2)}ms per draw`, 'pass');
+            } else {
+                log(`⚠ Draw performance: ${avgDrawTime.toFixed(2)}ms per draw (could be optimized)`, 'warn');
+            }
+        }
+
+        async function testMemoryLeaks() {
+            const section = createSection('💾 Memory Leak Detection');
+            
+            if (!window.performance || !window.performance.memory) {
+                log('ℹ Memory profiling not available in this browser', 'info');
+                return;
+            }
+            
+            const game = new GameOfLife('testCanvas');
+            
+            // Get initial memory
+            const initialMemory = performance.memory.usedJSHeapSize;
+            
+            // Simulate heavy usage
+            for (let i = 0; i < 10; i++) {
+                game.resizeGrid(100);
+                game.randomize();
+                for (let j = 0; j < 50; j++) {
+                    game.step();
+                    game.draw();
+                }
+                game.clear();
+            }
+            
+            // Force garbage collection if available
+            if (window.gc) {
+                window.gc();
+            }
+            
+            // Check memory after operations
+            setTimeout(() => {
+                const finalMemory = performance.memory.usedJSHeapSize;
+                const memoryIncrease = finalMemory - initialMemory;
+                const increaseMB = (memoryIncrease / 1024 / 1024).toFixed(2);
+                
+                if (memoryIncrease < 5 * 1024 * 1024) { // Less than 5MB increase
+                    log(`✓ Memory usage stable: ${increaseMB}MB increase`, 'pass');
+                } else if (memoryIncrease < 20 * 1024 * 1024) { // Less than 20MB
+                    log(`⚠ Moderate memory increase: ${increaseMB}MB`, 'warn');
+                } else {
+                    log(`✗ Significant memory increase: ${increaseMB}MB (potential leak)`, 'fail');
+                }
+            }, 1000);
+        }
+
+        async function testBrowserCompatibility() {
+            const section = createSection('🌐 Browser Compatibility');
+            
+            // Check for required browser features
+            const features = {
+                'Canvas API': !!document.createElement('canvas').getContext,
+                'RequestAnimationFrame': !!window.requestAnimationFrame,
+                'Array destructuring': (() => { try { eval('[a, b] = [1, 2]'); return true; } catch { return false; }})(),
+                'Arrow functions': (() => { try { eval('() => {}'); return true; } catch { return false; }})(),
+                'Template literals': (() => { try { eval('`test`'); return true; } catch { return false; }})(),
+                'Class syntax': (() => { try { eval('class Test {}'); return true; } catch { return false; }})(),
+                'let/const': (() => { try { eval('let x = 1; const y = 2;'); return true; } catch { return false; }})()
+            };
+            
+            for (const [feature, supported] of Object.entries(features)) {
+                if (supported) {
+                    log(`✓ ${feature} is supported`, 'pass');
+                } else {
+                    log(`✗ ${feature} is not supported`, 'fail');
+                }
+            }
+            
+            // Browser detection
+            const userAgent = navigator.userAgent;
+            log(`ℹ Browser: ${userAgent}`, 'info');
+            
+            // Check minimum browser versions
+            const isModernBrowser = 
+                (userAgent.includes('Chrome/') && parseInt(userAgent.split('Chrome/')[1]) >= 60) ||
+                (userAgent.includes('Firefox/') && parseInt(userAgent.split('Firefox/')[1]) >= 55) ||
+                (userAgent.includes('Safari/') && parseInt(userAgent.split('Version/')[1]) >= 11) ||
+                (userAgent.includes('Edge/') && parseInt(userAgent.split('Edge/')[1]) >= 79);
+            
+            if (isModernBrowser) {
+                log('✓ Running on a modern browser', 'pass');
+            } else {
+                log('⚠ Browser may be outdated', 'warn');
+            }
+        }
+
+        async function testEdgeCases() {
+            const section = createSection('🔍 Edge Cases & Stress Tests');
+            
+            const game = new GameOfLife('testCanvas');
+            
+            // Test 1: Minimum grid size
+            try {
+                game.resizeGrid(1);
+                log('✓ Handles minimum grid size (1×1)', 'pass');
+            } catch (error) {
+                log(`✗ Failed with minimum grid size: ${error}`, 'fail');
+            }
+            
+            // Test 2: Maximum grid size
+            try {
+                game.resizeGrid(200);
+                log('✓ Handles large grid size (200×200)', 'pass');
+            } catch (error) {
+                log(`✗ Failed with large grid size: ${error}`, 'fail');
+            }
+            
+            // Test 3: Rapid resize
+            try {
+                for (let i = 0; i < 20; i++) {
+                    game.resizeGrid(Math.floor(Math.random() * 90) + 10);
+                }
+                log('✓ Handles rapid resizing', 'pass');
+            } catch (error) {
+                log(`✗ Failed during rapid resizing: ${error}`, 'fail');
+            }
+            
+            // Test 4: Pattern loading on various grid sizes
+            game.resizeGrid(15); // Small grid for large pattern
+            try {
+                game.loadPattern('glider-gun');
+                log('✓ Handles large pattern on small grid', 'pass');
+            } catch (error) {
+                log(`✗ Failed loading large pattern: ${error}`, 'fail');
+            }
+            
+            // Test 5: Rapid play/pause
+            try {
+                for (let i = 0; i < 50; i++) {
+                    game.isRunning = !game.isRunning;
+                }
+                game.isRunning = false;
+                log('✓ Handles rapid play/pause toggling', 'pass');
+            } catch (error) {
+                log(`✗ Failed during rapid toggling: ${error}`, 'fail');
+            }
+            
+            // Test 6: Invalid pattern name
+            try {
+                game.loadPattern('nonexistent-pattern');
+                log('✓ Handles invalid pattern names gracefully', 'pass');
+            } catch (error) {
+                log(`✗ Error with invalid pattern: ${error}`, 'fail');
+            }
+        }
+
+        function showStats() {
+            const statsDiv = document.getElementById('testStats');
+            const total = passCount + failCount + warnCount;
+            const passRate = ((passCount / total) * 100).toFixed(1);
+            
+            statsDiv.innerHTML = `
+                <h3>📊 Test Statistics</h3>
+                <p>Total Tests: ${total}</p>
+                <p>✅ Passed: ${passCount}</p>
+                <p>❌ Failed: ${failCount}</p>
+                <p>⚠️ Warnings: ${warnCount}</p>
+                <p>Success Rate: ${passRate}%</p>
+                <p>Overall Status: ${failCount === 0 ? '🎉 All critical tests passed!' : '⚠️ Some tests failed - review needed'}</p>
+            `;
+            statsDiv.style.display = 'block';
+            
+            // Log summary
+            console.log('Test Suite Completed:', {
+                passed: passCount,
+                failed: failCount,
+                warnings: warnCount,
+                successRate: passRate + '%'
+            });
+        }
+    </script>
+</body>
+</html>
