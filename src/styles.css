@@ -255,3 +255,81 @@ select:hover, select:focus {
 .btn-primary.playing {
     animation: pulse 2s infinite;
 }
+
+/* v1.1 New Styles */
+.version {
+    font-size: 0.5em;
+    color: #fbbf24;
+    vertical-align: super;
+    margin-left: 5px;
+}
+
+.keyboard-shortcuts, .features {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.keyboard-shortcuts h3, .features h3 {
+    color: #667eea;
+    margin-bottom: 15px;
+}
+
+.keyboard-shortcuts ul, .features ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.keyboard-shortcuts li, .features li {
+    margin: 10px 0;
+    padding-left: 25px;
+    position: relative;
+}
+
+kbd {
+    background: #f3f4f6;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-family: monospace;
+    font-size: 0.9em;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Disabled button styles */
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #9ca3af;
+}
+
+.btn:disabled:hover {
+    transform: none;
+    background: #9ca3af;
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+    .btn {
+        min-width: 60px;
+        min-height: 44px;
+        font-size: 16px;
+    }
+    
+    input[type="range"] {
+        min-height: 44px;
+    }
+}
+
+/* Enhanced mobile responsive v1.1 */
+@media (max-width: 768px) {
+    .keyboard-shortcuts {
+        display: none;
+    }
+    
+    .features {
+        font-size: 0.9em;
+    }
+}

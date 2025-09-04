@@ -1,6 +1,10 @@
-# Conway's Game of Life
+# Conway's Game of Life v1.1 🎮
 
-An interactive web-based implementation of Conway's Game of Life, a cellular automaton devised by mathematician John Conway.
+[![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)](CHANGELOG.md)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-yellow.svg)](https://www.javascript.com/)
+
+An interactive web-based implementation of Conway's Game of Life, a cellular automaton devised by mathematician John Conway. Now with enhanced features including undo/redo, auto-save, pattern import/export, and full mobile support!
 
 ## 🎯 Overview
 
@@ -37,14 +41,29 @@ cd conways-game-of-life
 
 3. That's it! The simulation is ready to use.
 
+## 🎆 What's New in v1.1
+
+- **↩️ Undo/Redo** - Navigate through your creation history
+- **💾 Auto-Save** - Never lose your progress
+- **📁 Import/Export** - Share your patterns with others
+- **📱 Touch Support** - Play on mobile devices
+- **⌨️ Keyboard Shortcuts** - Quick access to all functions
+- **🚀 Optimized Performance** - Better rendering for large grids
+
 ## 🎮 Features
 
 ### Interactive Controls
 
-- **Play/Pause**: Start or stop the simulation
-- **Step**: Advance the simulation by one generation
-- **Clear**: Reset the grid to empty state
-- **Random**: Generate a random pattern
+- **Play/Pause** (`Space`): Start or stop the simulation
+- **Step** (`S`): Advance the simulation by one generation
+- **Clear** (`C`): Reset the grid to empty state
+- **Random** (`R`): Generate a random pattern
+- **Undo** (`Ctrl+Z`): Undo last action
+- **Redo** (`Ctrl+Y`): Redo last undone action
+- **Save State**: Save current state to browser
+- **Load State**: Load previously saved state
+- **Export Pattern** (`Ctrl+S`): Save pattern as JSON file
+- **Import Pattern** (`Ctrl+O`): Load pattern from JSON file
 - **Speed Control**: Adjust simulation speed (1-60 FPS)
 - **Grid Size**: Change the grid dimensions (10×10 to 100×100)
 
@@ -63,6 +82,7 @@ Select from pre-defined patterns including:
 
 - **Click** on cells to toggle them between alive/dead
 - **Click and drag** to draw patterns
+- **Touch gestures** supported on mobile devices
 - The grid wraps around edges (toroidal topology)
 
 ## 📁 Project Structure
@@ -71,10 +91,12 @@ Select from pre-defined patterns including:
 conways-game-of-life/
 ├── index.html          # Main HTML file
 ├── src/
-│   ├── game.js        # Game logic and interactions
+│   ├── game.js        # Game logic and interactions (v1.1 enhanced)
 │   └── styles.css     # Styling and animations
-├── tests/             # Test files (to be implemented)
-├── docs/              # Documentation
+├── test-suite.html    # Comprehensive test suite
+├── test-report.md     # Test results and analysis
+├── CHANGELOG.md       # Version history
+├── WARP.md           # Development guide
 └── README.md          # This file
 ```
 

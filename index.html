@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conway's Game of Life</title>
+    <title>Conway's Game of Life v1.1</title>
     <link rel="stylesheet" href="src/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Conway's Game of Life</h1>
-            <p class="subtitle">A cellular automaton simulation</p>
+            <h1>Conway's Game of Life <span class="version">v1.1</span></h1>
+            <p class="subtitle">A cellular automaton simulation with enhanced features</p>
         </header>
         
         <div class="game-container">
@@ -18,13 +19,37 @@
             
             <div class="controls">
                 <div class="control-group">
-                    <button id="playPauseBtn" class="btn btn-primary">
+                    <button id="playPauseBtn" class="btn btn-primary" title="Play/Pause (Space)">
                         <span class="play-icon">▶</span>
                         <span class="pause-icon" style="display:none;">⏸</span>
                     </button>
-                    <button id="stepBtn" class="btn">Step</button>
-                    <button id="clearBtn" class="btn">Clear</button>
-                    <button id="randomBtn" class="btn">Random</button>
+                    <button id="stepBtn" class="btn" title="Step (S)">Step</button>
+                    <button id="clearBtn" class="btn" title="Clear (C)">Clear</button>
+                    <button id="randomBtn" class="btn" title="Random (R)">Random</button>
+                </div>
+                
+                <div class="control-group">
+                    <button id="undoBtn" class="btn" title="Undo (Ctrl+Z)" disabled>
+                        <i class="fas fa-undo"></i>
+                    </button>
+                    <button id="redoBtn" class="btn" title="Redo (Ctrl+Y)" disabled>
+                        <i class="fas fa-redo"></i>
+                    </button>
+                    <button id="saveBtn" class="btn" title="Save State">
+                        <i class="fas fa-save"></i>
+                    </button>
+                    <button id="loadBtn" class="btn" title="Load State">
+                        <i class="fas fa-folder-open"></i>
+                    </button>
+                </div>
+                
+                <div class="control-group">
+                    <button id="exportBtn" class="btn" title="Export Pattern (Ctrl+S)">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                    <button id="importBtn" class="btn" title="Import Pattern (Ctrl+O)">
+                        <i class="fas fa-upload"></i> Import
+                    </button>
                 </div>
                 
                 <div class="control-group">
@@ -67,6 +92,32 @@
                     <li>Any live cell with 2 or 3 live neighbors survives</li>
                     <li>Any dead cell with exactly 3 live neighbors becomes alive</li>
                     <li>All other live cells die, and all other dead cells stay dead</li>
+                </ul>
+            </div>
+            
+            <div class="keyboard-shortcuts">
+                <h3>Keyboard Shortcuts:</h3>
+                <ul>
+                    <li><kbd>Space</kbd> - Play/Pause</li>
+                    <li><kbd>S</kbd> - Step</li>
+                    <li><kbd>C</kbd> - Clear</li>
+                    <li><kbd>R</kbd> - Random</li>
+                    <li><kbd>Ctrl+Z</kbd> - Undo</li>
+                    <li><kbd>Ctrl+Y</kbd> - Redo</li>
+                    <li><kbd>Ctrl+S</kbd> - Export Pattern</li>
+                    <li><kbd>Ctrl+O</kbd> - Import Pattern</li>
+                </ul>
+            </div>
+            
+            <div class="features">
+                <h3>New in v1.1:</h3>
+                <ul>
+                    <li>✨ Touch support for mobile devices</li>
+                    <li>💾 Auto-save and restore state</li>
+                    <li>↩️ Undo/Redo functionality</li>
+                    <li>📁 Import/Export patterns</li>
+                    <li>⌨️ Keyboard shortcuts</li>
+                    <li>🚀 Optimized rendering for large grids</li>
                 </ul>
             </div>
         </div>
