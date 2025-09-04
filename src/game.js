@@ -50,34 +50,65 @@ class GameOfLife {
     }
     
     setupEventListeners() {
-        // Canvas click to toggle cells
-        this.canvas.addEventListener('click', (e) => {
+        // Canvas interaction state
+        let isDrawing = false;
+        let hasMovedWhileDrawing = false;
+        
+        // Canvas mousedown - start drawing
+        this.canvas.addEventListener('mousedown', (e) => {
+            isDrawing = true;
+            hasMovedWhileDrawing = false;
+            
+            // Immediately draw on the clicked cell
             const rect = this.canvas.getBoundingClientRect();
             const x = Math.floor((e.clientX - rect.left) / this.cellSize);
             const y = Math.floor((e.clientY - rect.top) / this.cellSize);
             
             if (x >= 0 && x < this.gridSize && y >= 0 && y < this.gridSize) {
-                this.grid[y][x] = this.grid[y][x] ? 0 : 1;
+                // Store the initial state for consistent drawing
+                this.drawingState = this.grid[y][x] === 0 ? 1 : 0;
+                this.grid[y][x] = this.drawingState;
                 this.draw();
                 this.updateStats();
             }
         });
         
-        // Canvas drag to paint cells
-        let isDrawing = false;
-        this.canvas.addEventListener('mousedown', () => isDrawing = true);
-        document.addEventListener('mouseup', () => isDrawing = false);
+        // Canvas mouseup - stop drawing
+        this.canvas.addEventListener('mouseup', (e) => {
+            if (!hasMovedWhileDrawing) {
+                // If no movement occurred, treat as a click toggle
+                const rect = this.canvas.getBoundingClientRect();
+                const x = Math.floor((e.clientX - rect.left) / this.cellSize);
+                const y = Math.floor((e.clientY - rect.top) / this.cellSize);
+                
+                if (x >= 0 && x < this.gridSize && y >= 0 && y < this.gridSize) {
+                    // Toggle back if it was just a click without movement
+                    this.grid[y][x] = this.grid[y][x] ? 0 : 1;
+                    this.draw();
+                    this.updateStats();
+                }
+            }
+            isDrawing = false;
+        });
         
+        // Document mouseup - ensure drawing stops even if mouse leaves canvas
+        document.addEventListener('mouseup', () => {
+            isDrawing = false;
+        });
+        
+        // Canvas mousemove - draw while dragging
         this.canvas.addEventListener('mousemove', (e) => {
             if (!isDrawing) return;
             
+            hasMovedWhileDrawing = true;
             const rect = this.canvas.getBoundingClientRect();
             const x = Math.floor((e.clientX - rect.left) / this.cellSize);
             const y = Math.floor((e.clientY - rect.top) / this.cellSize);
             
             if (x >= 0 && x < this.gridSize && y >= 0 && y < this.gridSize) {
-                if (this.grid[y][x] === 0) {
-                    this.grid[y][x] = 1;
+                // Use consistent drawing state during drag
+                if (this.grid[y][x] !== this.drawingState) {
+                    this.grid[y][x] = this.drawingState;
                     this.draw();
                     this.updateStats();
                 }
@@ -139,6 +170,7 @@ class GameOfLife {
             playIcon.style.display = 'none';
             pauseIcon.style.display = 'inline';
             btn.classList.add('playing');
+            this.lastFrameTime = 0;  // Reset frame timing
             this.animate();
         } else {
             playIcon.style.display = 'inline';
@@ -146,6 +178,7 @@ class GameOfLife {
             btn.classList.remove('playing');
             if (this.animationId) {
                 cancelAnimationFrame(this.animationId);
+                this.animationId = null;  // Clear the reference
             }
         }
     }
@@ -257,12 +290,14 @@ class GameOfLife {
         document.getElementById('playPauseBtn').classList.remove('playing');
         
         this.grid = this.createEmptyGrid();
+        this.nextGrid = this.createEmptyGrid();  // Also reset nextGrid to prevent stale data
         this.generation = 0;
         this.draw();
         this.updateStats();
         
         if (this.animationId) {
             cancelAnimationFrame(this.animationId);
+            this.animationId = null;  // Clear the reference
         }
     }
     
@@ -302,8 +337,14 @@ class GameOfLife {
         const offsetX = Math.floor((newSize - oldSize) / 2);
         const offsetY = Math.floor((newSize - oldSize) / 2);
         
-        for (let y = 0; y < oldSize; y++) {
-            for (let x = 0; x < oldSize; x++) {
+        // Determine the range to copy based on grid sizes
+        const startY = Math.max(0, -offsetY);
+        const endY = Math.min(oldSize, newSize - offsetY);
+        const startX = Math.max(0, -offsetX);
+        const endX = Math.min(oldSize, newSize - offsetX);
+        
+        for (let y = startY; y < endY; y++) {
+            for (let x = startX; x < endX; x++) {
                 const newX = x + offsetX;
                 const newY = y + offsetY;
                 if (newX >= 0 && newX < newSize && newY >= 0 && newY < newSize) {
@@ -374,13 +415,21 @@ class GameOfLife {
         const pattern = patterns[patternName];
         if (!pattern) return;
         
+        // Check if pattern is too large for the grid
+        if (pattern.length > this.gridSize || pattern[0].length > this.gridSize) {
+            console.warn(`Pattern "${patternName}" is too large for the current grid size`);
+            return;
+        }
+        
         // Place pattern in center of grid
         const offsetX = Math.floor((this.gridSize - pattern[0].length) / 2);
         const offsetY = Math.floor((this.gridSize - pattern.length) / 2);
         
         for (let y = 0; y < pattern.length; y++) {
             for (let x = 0; x < pattern[y].length; x++) {
-                this.grid[y + offsetY][x + offsetX] = pattern[y][x];
+                if (y + offsetY < this.gridSize && x + offsetX < this.gridSize) {
+                    this.grid[y + offsetY][x + offsetX] = pattern[y][x];
+                }
             }
         }
         
