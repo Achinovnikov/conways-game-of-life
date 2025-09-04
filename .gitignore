@@ -68,4 +68,8 @@ docs/generated/
 
 # Local settings and scripts (remove these lines if you want to track them)
 .warp-settings.md
-# sync-github.ps1  # Uncomment to ignore sync script
+sync-log.txt
+*.log
+# auto-sync.ps1  # Uncomment to ignore auto-sync scripts
+# setup-user-sync.ps1
+# setup-auto-sync.ps1
